@@ -60,8 +60,6 @@ public class NonBlockingServer {
                         this.acceptConnection(existingKey);
                     } else if(existingKey.isReadable()) {
                         this.readFromConnection(existingKey);
-                    } else if(existingKey.isWritable()) {
-                        this.writeBackToConnection(existingKey);
                     } // there are other types too
                 }
                 existingKeys.remove(existingKey);
@@ -100,9 +98,16 @@ public class NonBlockingServer {
         byte[] request = new byte[totalReads];
         System.arraycopy(buffer.array(), 0, request, 0, totalReads);
         System.out.println("got request :: " + new String(request));
+
+        writeBackToConnection(key);
     }
 
-    private void writeBackToConnection(SelectionKey key) {
-        //TODO implement write logic
+    private void writeBackToConnection(SelectionKey key) throws IOException {
+        SocketChannel socketChannel = (SocketChannel) key.channel();
+        ByteBuffer buff = ByteBuffer.allocate(1024);
+        String response = "Pong Pong \n";
+        buff.put(response.getBytes());
+        buff.flip();
+        socketChannel.write(buff);
     }
 }
