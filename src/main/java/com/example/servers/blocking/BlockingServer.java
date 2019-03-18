@@ -13,10 +13,23 @@ import java.net.Socket;
  *
  */
 public class BlockingServer {
-    private static final int PORT = 8989;
+    private static int PORT = 8989;
     private static final String REQUEST_EXIT = "exit";
 
     public static void main(String[] args) throws IOException {
+        BlockingServer blockingServer = new BlockingServer();
+        blockingServer.run();
+    }
+
+    public BlockingServer(int port) {
+        this.PORT = port;
+    }
+
+    public BlockingServer() {
+        // use default port 8989
+    }
+
+    public void run() throws IOException {
         try(ServerSocket socket = new ServerSocket(PORT)){
             //keeps running
             while(true) {
